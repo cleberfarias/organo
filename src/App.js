@@ -71,9 +71,7 @@ function App() {
         colaboradores={colaboradores.filter(colaborador => colaborador.parentesco === parentesco.nome)}
 
       />)}
-      <footer className="rodape">
-            <img src="./imagens/rodapé.svg" alt="O Rodapé principal da página do Organo"/>
-      </footer>
+      <Rodape/>
     </div>
     
   );

@@ -11,3 +11,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.organização {
+  color: #6278F7;
+  font-weight: 40;
+  text-align: center;
+  padding: 32px;
+  font-size: 32px;
+  text-decoration: underline;
+  
+  
+
+}

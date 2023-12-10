@@ -1,15 +1,23 @@
 .botao{
     background-color: #6278f7;
     border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-weight: 700;
     font-size: 18px;
-    padding: 32px;
+    padding: 16px;
     border: none;
     cursor: pointer;
     color: #fff;
     margin: 32px 0;
 }
+.formulario form {
+    margin-top: 16px;
+  }
+  
 .botao:hover{
-    color: #71779A;
+    color: #05f92d;
+
 
 }

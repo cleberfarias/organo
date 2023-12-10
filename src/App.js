@@ -1,26 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Banner from "./componentes/Banner/Banner";
 import Formulario from "./componentes/Formulario";
 import Time from "./componentes/Time";
 import Rodape from "./componentes/Rodape/Rodape";
 
-
 function App() {
-  const [colaboradores, setColaboradores] = useState([])
+  // Carrega dados do localStorage no montar do componente
+  const [colaboradores, setColaboradores] = useState(
+    JSON.parse(localStorage.getItem("colaboradores")) || []
+  );
 
   const aoNovoColaboradorAdicionado = (colaborador) => {
-    setColaboradores([...colaboradores, colaborador])
-  }
-  const parentescos = [
+    const newColaboradores = [...colaboradores, colaborador];
+    setColaboradores(newColaboradores);
+    // Salva dados no localStorage quando um novo colaborador é adicionado
+    localStorage.setItem("colaboradores", JSON.stringify(newColaboradores));
+  };
 
+  const [parentescos, setParentesco] = useState([
     {
-      nome: 'Mãe e Pai',
+      nome: 'Avô e Avó',
       corPrimaria: '#57C278',
       corSecundaria: '#D9F7E9',
     },
 
     {
-      nome: 'Avô e Avó',
+      nome: 'Mãe e Pai',
       corPrimaria: '#A6D157',
       corSecundaria: '#F0F8E2',
     },
@@ -47,33 +52,50 @@ function App() {
       corSecundaria: '#F08080',
     },
     {
-      nome: 'Genro',
+      nome: 'Genro/Nora',
       corPrimaria: '#E9967A',
       corSecundaria: '#FFA07A',
     }
-  ]
+  
+  ]);
+
+  function deletarColaborador() {
+    console.log("deletando colaborador");
+  }
+
+  useEffect(() => {
+    // Salva dados de parentescos no localStorage quando eles mudam
+    localStorage.setItem("parentescos", JSON.stringify(parentescos));
+  }, [parentescos]);
+
   return (
     <div className="App">
       <Banner />
-      
-
-      <Formulario parentescos={parentescos.map(parentesco => parentesco.nome)} aoColaboradorCadastrado={colaborador => aoNovoColaboradorAdicionado(colaborador)} />
+      <Formulario
+        parentescos={parentescos.map((parentesco) => parentesco.nome)}
+        aoColaboradorCadastrado={(colaborador) =>
+          aoNovoColaboradorAdicionado(colaborador)
+        }
+      />
       <div>
         <section>
           <h1 className="organização">Minha Organização</h1>
         </section>
       </div>
-      {parentescos.map(parentesco => <Time
-        key={parentesco.nome}
-        nome={parentesco.nome}
-        corPrimaria={parentesco.corPrimaria}
-        corSecundaria={parentesco.corSecundaria}
-        colaboradores={colaboradores.filter(colaborador => colaborador.parentesco === parentesco.nome)}
-
-      />)}
-      <Rodape/>
+      {parentescos.map((parentesco) => (
+        <Time
+          key={parentesco.nome}
+          nome={parentesco.nome}
+          corPrimaria={parentesco.corPrimaria}
+          corSecundaria={parentesco.corSecundaria}
+          colaboradores={colaboradores.filter(
+            (colaborador) => colaborador.parentesco === parentesco.nome
+          )}
+          aoDeletar={deletarColaborador}
+        />
+      ))}
+      <Rodape />
     </div>
-    
   );
 }
 

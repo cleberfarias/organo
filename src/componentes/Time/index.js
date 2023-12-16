@@ -1,26 +1,29 @@
-import Colaborador from '../Colaborador/Colaborador'
-import './Time.css'
+import Colaborador from '../Colaborador/Colaborador';
+import './Time.css';
 
-const Time = (time, colaboradores, aoDeletar,mudarCor) => {
-    const css = { backgroundColor: time.corSecundaria }
+const Time = ({ nome, corPrimaria, corSecundaria, colaboradores, aoDeletar }) => {
+    const css = { backgroundColor: corSecundaria };
+
     return (
-        time.colaboradores.length > 0 && (
-            <section className='time' style={css}>
-                <h3 style={{ borderColor: time.corPrimaria }}>{time.nome}</h3>
+        <section className='time' style={css}>
+            <h3 style={{ borderColor: corPrimaria }}>{nome}</h3>
+            {colaboradores.length > 0 ? (
                 <div className='colaboradores'>
-                    {time.colaboradores.map((colaborador) => (
+                    {colaboradores.map((colaborador) => (
                         <Colaborador
-                            corDeFundo={time.corPrimaria}
+                            corDeFundo={corPrimaria}
                             key={colaborador.nome}
                             nome={colaborador.nome}
                             sobrenome={colaborador.sobrenome}
                             imagem={colaborador.imagem}
-                            aoDeletar={aoDeletar}
+                            aoDeletar={() => aoDeletar(colaborador.id)} // Certifique-se de que o id seja passado corretamente
                         />
                     ))}
                 </div>
-            </section>
-        )
+            ) : (
+                <p>Sem colaboradores associados a este parentesco.</p>
+            )}
+        </section>
     );
 };
 

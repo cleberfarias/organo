@@ -3,19 +3,24 @@ import Banner from "./componentes/Banner/Banner";
 import Formulario from "./componentes/Formulario";
 import Time from "./componentes/Time";
 import Rodape from "./componentes/Rodape/Rodape";
+import { v4 as uuidv4 } from 'uuid';
+
 
 function App() {
-  // Carrega dados do localStorage no montar do componente
   const [colaboradores, setColaboradores] = useState(
     JSON.parse(localStorage.getItem("colaboradores")) || []
   );
 
+  useEffect(() => {
+    localStorage.setItem("colaboradores", JSON.stringify(colaboradores));
+  }, [colaboradores]);
+
   const aoNovoColaboradorAdicionado = (colaborador) => {
-    const newColaboradores = [...colaboradores, colaborador];
-    setColaboradores(newColaboradores);
-    // Salva dados no localStorage quando um novo colaborador é adicionado
-    localStorage.setItem("colaboradores", JSON.stringify(newColaboradores));
+    // Adicione um id único ao colaborador usando uuidv4()
+    const novoColaborador = { ...colaborador, id: uuidv4() };
+    setColaboradores([...colaboradores, novoColaborador]);
   };
+
 
   const [parentescos, setParentesco] = useState([
     {
@@ -23,13 +28,11 @@ function App() {
       corPrimaria: '#57C278',
       corSecundaria: '#D9F7E9',
     },
-
     {
       nome: 'Mãe e Pai',
       corPrimaria: '#A6D157',
       corSecundaria: '#F0F8E2',
     },
-
     {
       nome: 'Filhos',
       corPrimaria: '#D86EBF',
@@ -45,55 +48,52 @@ function App() {
       corPrimaria: '#008000',
       corSecundaria: '#228B22',
     },
-
     {
-      nome: 'Nora',
-      corPrimaria: '#CD5C5C',
-      corSecundaria: '#F08080',
-    },
-    {
-      nome: 'Genro/Nora',
+      nome: 'Genros e Nora',
       corPrimaria: '#E9967A',
       corSecundaria: '#FFA07A',
     }
-  
   ]);
 
-  function deletarColaborador() {
-    console.log("deletando colaborador");
-  }
+  const deletarColaborador = (colaboradorId) => {
+    const novosColaboradores = colaboradores.filter(
+      (colaborador) => colaborador.id !== colaboradorId
+    );
+    setColaboradores(novosColaboradores);
+  };
 
-  useEffect(() => {
-    // Salva dados de parentescos no localStorage quando eles mudam
-    localStorage.setItem("parentescos", JSON.stringify(parentescos));
-  }, [parentescos]);
 
   return (
     <div className="App">
       <Banner />
       <Formulario
-        parentescos={parentescos.map((parentesco) => parentesco.nome)}
-        aoColaboradorCadastrado={(colaborador) =>
-          aoNovoColaboradorAdicionado(colaborador)
-        }
+      
       />
       <div>
         <section>
           <h1 className="organização">Minha Organização</h1>
         </section>
       </div>
-      {parentescos.map((parentesco) => (
-        <Time
-          key={parentesco.nome}
-          nome={parentesco.nome}
-          corPrimaria={parentesco.corPrimaria}
-          corSecundaria={parentesco.corSecundaria}
-          colaboradores={colaboradores.filter(
-            (colaborador) => colaborador.parentesco === parentesco.nome
-          )}
-          aoDeletar={deletarColaborador}
-        />
-      ))}
+      {parentescos.map((parentesco) => {
+        const colaboradoresAssociados = colaboradores.filter(
+          (colaborador) => colaborador.parentesco === parentesco.nome
+        );
+
+        if (colaboradoresAssociados.length > 0) {
+          return (
+            <Time
+              key={parentesco.nome}
+              nome={parentesco.nome}
+              corPrimaria={parentesco.corPrimaria}
+              corSecundaria={parentesco.corSecundaria}
+              colaboradores={colaboradoresAssociados}
+              aoDeletar={deletarColaborador} // Não precisa da função anônima aqui
+            />
+          );
+        }
+
+        return null;
+      })}
       <Rodape />
     </div>
   );

@@ -5,12 +5,14 @@ import ListaSuspensa from '../ListaSuspensa';
 import Resizer from 'react-image-file-resizer'; // Importa a biblioteca de redimensionamento de imagem
 import './Formulario.css';
 
+
 const Formulario = (props) => {
     const [nome, setNome] = useState('');
     const [sobrenome, setSobrenome] = useState('');
     const [imagem, setImagem] = useState('');
     const [parentesco, setParentesco] = useState('');
     const [previewImagem, setPreviewImagem] = useState('');
+    
 
     const redimensionarImagem = (file) => {
         Resizer.imageFileResizer(
@@ -50,6 +52,7 @@ const Formulario = (props) => {
         setParentesco('');
         setPreviewImagem('');
     };
+    
 
     return (
         <section className='formulario'>
@@ -97,6 +100,7 @@ const Formulario = (props) => {
                 />
                 <Botao>Criar Card</Botao>
             </form>
+            
         </section>
     );
 };
